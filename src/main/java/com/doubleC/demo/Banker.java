@@ -1,6 +1,7 @@
 package com.doubleC.demo;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 class Process {
@@ -90,7 +91,48 @@ public class Banker {
     //系统自带属性： 系统当前资源
     public int[] available;
 
-    List<Process> processes;
+    public List<Process> processes;
 
+    public Banker(int[] available, List<Process> processes) {
+        this.available = available;
+        this.processes = processes;
+    }
 
+    public void isSafe(){
+        List<Process> secureProcess = new ArrayList<>();
+        //进行初始化，创建安全序列
+        int[] work = available.clone();
+        for (Process process : processes){
+            process.setFinished(false);
+        }
+
+        while (secureProcess.size() < processes.size()){
+            boolean safe = false;
+            for (Process p : processes){
+
+                if (p.isFinished() == false && p.canBeSatisfied(work)){
+                    //将P加入安全队列
+                    secureProcess.add(p);
+
+                    //模拟资源释放
+                    for (int i = 0; i < work.length ; i++){
+                        work[i] += p.getTotal()[i];
+                    }
+                    p.setFinished(true);
+                    safe = true;
+                }
+
+            }
+
+            if (!safe) {
+                System.out.println("死锁已发生.");
+                return;
+            }
+
+        }
+        System.out.println("系统顺利运行! 安全队列为 : ");
+        for (Process p: secureProcess){
+            System.out.print(p.getpID() + " ");
+        }
+    }
 }
