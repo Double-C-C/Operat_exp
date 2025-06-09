@@ -36,20 +36,27 @@ class PCB {
         System.out.println("\n\n===== 短作业优先算法 =====");
 
 
-
+        //当等待队列不为空 或者 有进程占用CPU时
+        //当等待队列为空且CPU空闲，说明没有任务了
         while (!Waits.isEmpty() || run != null){
             List<PCB> Ready = new ArrayList<>();
+
+            //这里是在模拟进程到达等待队列的过程
             for (PCB p : Waits) {
                 if (currentTime >= p.arrivalTime && p.state.equals("W")) {
                     Ready.add(p);
                 }
             }
+
+            //当CPU空闲，且等待队列不为空，选择一个服务时间最短的进程享用CPU
+            //需要做的 ： 筛选最短进程、修改状态字、修改等待队列
             if (run == null && !Ready.isEmpty()) {
                 run = Collections.min(Ready, Comparator.comparingInt(p -> p.totalTime));
                 run.state = "R";
                 Waits.remove(run);
             }
 
+            //打印当前时间的进程情况
             System.out.println("\n[时间 " + currentTime + "]");
             if (run != null) {
                 System.out.println("当前运行进程:\n" + run);
@@ -74,7 +81,8 @@ class PCB {
                     System.out.println(p);
                 }
             }
-
+            //模拟Cpu的运行过程
+            //当运行完成时 ： 修改状态字、计算周转时间、等待时间
             if (run != null) {
                 run.usedTime++;
                 if (run.usedTime == run.totalTime) {
@@ -110,8 +118,11 @@ class PCB {
         int totalWaiting = 0;
         System.out.println("\n\n===== 抢占式短作业优先算法（SRTF） =====");
 
+        //抢占式与短作业优先不同的地方：
         while (finishes.size() < processes.size()) {
             List<PCB> ready = new ArrayList<>();
+
+            //依旧模拟进程达到，加入等待队列
             for (PCB p : all) {
                 if (currentTime >= p.arrivalTime && !p.state.equals("F") && p.usedTime < p.totalTime) {
                     ready.add(p);
@@ -121,6 +132,8 @@ class PCB {
             if (!ready.isEmpty()) {
                 PCB next = Collections.min(ready, Comparator.comparingInt(p -> p.totalTime - p.usedTime));
                 if (run == null || run != next) {
+                    if (run != null)  run.state = "W";
+
                     run = next;
                     run.state = "R";
                 }
