@@ -11,7 +11,17 @@ target/
 *.iws
 *.iml
 *.ipr
+/out/
+*.jar
 
+*.log
+
+
+# Launch4j 输出
+*.exe
+# 临时文件
+*.tmp
+*.MF
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -40,4 +50,5 @@ build/
 
 ### Java ###
 *.class
-*.log
+
+/.idea/artifacts
