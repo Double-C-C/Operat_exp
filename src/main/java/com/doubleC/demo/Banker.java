@@ -106,7 +106,7 @@ public class Banker {
         this.processes = processes;
     }
 
-    public void isSafe(){
+    public List<Process> isSafe(){
         List<Process> secureProcess = new ArrayList<>();
         //进行初始化，创建安全序列
         int[] work = available.clone();
@@ -134,7 +134,7 @@ public class Banker {
 
             if (!safe) {
                 System.out.println("死锁已发生.");
-                return;
+                return null;
             }
 
         }
@@ -143,6 +143,7 @@ public class Banker {
             System.out.print(p.getpID() + " ");
 
         }
+        return secureProcess;
     }
 
 
